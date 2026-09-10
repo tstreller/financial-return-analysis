@@ -18,6 +18,24 @@ The goal is **not** to build or claim a profitable trading strategy. The project
 
 Data is downloaded with `yfinance` for an educational portfolio exercise. It is **not treated as research-grade futures data**.
 
+## Sample Results
+
+The executed notebook currently covers **1,421 paired daily-return observations** from January 2021 through August 2026.
+
+| Metric | ES | GC |
+|---|---:|---:|
+| Mean daily return | 0.0572% | 0.0644% |
+| Daily volatility | 1.0487% | 1.1623% |
+| Annualized volatility | 16.65% | 18.45% |
+| Skewness | 0.143 | -0.926 |
+| Excess kurtosis | 6.621 | 8.627 |
+| 95% CI for mean daily return | 0.0026% to 0.1118% | 0.0039% to 0.1249% |
+| One-sample t-test p-value | 0.03995 | 0.03695 |
+
+The sample daily-return correlation between ES and GC is **0.1039**.
+
+These results are descriptive and exploratory. A p-value below 0.05 in this convenience sample does **not** establish a persistent return premium or tradable edge. Vendor construction, futures-roll effects, regime dependence, multiple testing, implementation costs, and true out-of-sample validation remain unresolved.
+
 ## Methods
 
 1. Data acquisition and validation
