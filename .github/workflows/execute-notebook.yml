@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: execute-portfolio-notebook
+  cancel-in-progress: false
+
 jobs:
   execute:
     runs-on: ubuntu-latest
@@ -18,6 +22,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -43,9 +49,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add notebooks/return_analysis.ipynb
+
           if git diff --cached --quiet; then
             echo "No notebook changes to commit."
-          else
-            git commit -m "Execute return analysis notebook [skip ci]"
-            git push
+            exit 0
           fi
+
+          git commit -m "Execute return analysis notebook [skip ci]"
+          git pull --rebase origin main
+          git push origin main
