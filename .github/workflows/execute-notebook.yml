@@ -1,0 +1,47 @@
+name: Execute portfolio notebook
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "notebooks/return_analysis.ipynb"
+      - "requirements.txt"
+      - ".github/workflows/execute-notebook.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Execute notebook
+        run: |
+          jupyter nbconvert             --to notebook             --execute notebooks/return_analysis.ipynb             --inplace             --ExecutePreprocessor.timeout=240
+
+      - name: Commit executed notebook
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add notebooks/return_analysis.ipynb
+          if git diff --cached --quiet; then
+            echo "No notebook changes to commit."
+          else
+            git commit -m "Execute return analysis notebook [skip ci]"
+            git push
+          fi
